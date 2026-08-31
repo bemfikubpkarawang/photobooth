@@ -1,0 +1,53 @@
+{
+  "id": "retro5",
+  "name": "retro5",
+  "category": "retro",
+  "source": "C:/Users/tiara/OneDrive/Dokumen/foto-frame/frames/retro/retro5.png",
+  "width": 736,
+  "height": 1308,
+  "slot_count": 2,
+  "slots": [
+    {
+      "id": 1,
+      "points": [
+        [
+          101.07,
+          146.65
+        ],
+        [
+          600.49,
+          158.55
+        ],
+        [
+          596.53,
+          475.64
+        ],
+        [
+          91.16,
+          449.87
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "points": [
+        [
+          83.24,
+          745.16
+        ],
+        [
+          608.42,
+          745.16
+        ],
+        [
+          612.38,
+          1072.16
+        ],
+        [
+          75.31,
+          1062.25
+        ]
+      ]
+    }
+  ]
+}

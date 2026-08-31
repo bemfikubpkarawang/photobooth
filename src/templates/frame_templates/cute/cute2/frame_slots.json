@@ -1,0 +1,53 @@
+{
+  "id": "cute2",
+  "name": "cute2",
+  "category": "cute",
+  "source": "C:/Users/tiara/OneDrive/Dokumen/foto-frame/frames/cute/cute2.png",
+  "width": 1152,
+  "height": 2048,
+  "slot_count": 2,
+  "slots": [
+    {
+      "id": 1,
+      "points": [
+        [
+          530.62,
+          341.33
+        ],
+        [
+          977.45,
+          400.29
+        ],
+        [
+          921.6,
+          859.54
+        ],
+        [
+          477.87,
+          797.48
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "points": [
+        [
+          105.5,
+          1101.58
+        ],
+        [
+          546.13,
+          999.18
+        ],
+        [
+          645.43,
+          1446.01
+        ],
+        [
+          211.01,
+          1548.41
+        ]
+      ]
+    }
+  ]
+}
