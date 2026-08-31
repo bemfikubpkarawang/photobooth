@@ -1,100 +1,212 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Image } from 'lucide-react';
+import { Camera, ArrowRight } from 'lucide-react';
+import { FRAMES, type FrameData } from '../data/frames';
 
-// Placeholder gallery items using gradient cards to simulate photobooth results
-const GALLERY_ITEMS = [
-  { color: '#6C63FF', label: 'Aesthetic Session', sub: 'aesthetic3 frame' },
-  { color: '#EC4899', label: 'Cute Vibes', sub: 'cute4 frame' },
-  { color: '#1E40AF', label: 'FIK Moment', sub: 'fik2 frame' },
-  { color: '#059669', label: 'Y2K Energy', sub: 'y2k3 frame' },
-  { color: '#7C3AED', label: 'Retro Feel', sub: 'retro2 frame' },
-  { color: '#D97706', label: 'Fun Day', sub: 'fun3 frame' },
-  { color: '#DB2777', label: 'Aesthetic 2', sub: 'aesthetic1 frame' },
-  { color: '#2563EB', label: 'FIK Pride', sub: 'fik5 frame' },
-  { color: '#7C3AED', label: 'Y2K Glam', sub: 'y2k1 frame' },
-];
+// Ambil semua template preview yang tersedia.
+// Struktur:
+// src/templates/frame_templates/[category]/[frame]/template_preview.png
+const previewModules = import.meta.glob(
+  '../templates/frame_templates/*/*/template_preview.png',
+  {
+    eager: true,
+    import: 'default',
+    query: '?url',
+  }
+) as Record<string, string>;
+
+function getPreviewUrl(frame: FrameData): string {
+  const expectedSuffix =
+    `/${frame.category}/${frame.name}/template_preview.png`;
+
+  const entry = Object.entries(previewModules).find(([path]) =>
+    path.endsWith(expectedSuffix)
+  );
+
+  return entry?.[1] ?? '';
+}
+
+function getFrameLabel(frame: FrameData): string {
+  return `${frame.categoryLabel} ${frame.name.match(/\d+$/)?.[0] ?? ''}`.trim();
+}
 
 export default function GalleryPage() {
   const navigate = useNavigate();
 
+  const handleTryFrame = (frame: FrameData) => {
+    navigate('/frames');
+  };
+
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 page-enter" style={{ background: '#F8F7FF' }}>
+    <div
+      className="min-h-screen pt-24 pb-20 px-4 page-enter"
+      style={{ background: '#F8F7FF' }}
+    >
       <div className="max-w-6xl mx-auto">
+
+        {/* Header */}
         <div className="text-center mb-12">
           <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-5"
-            style={{ background: 'rgba(108,99,255,0.1)', color: '#6C63FF', border: '1px solid rgba(108,99,255,0.2)' }}
+            style={{
+              background: 'rgba(108,99,255,0.1)',
+              color: '#6C63FF',
+              border: '1px solid rgba(108,99,255,0.2)',
+            }}
           >
             Gallery
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: '#1A1B3C' }}>
+
+          <h1
+            className="text-4xl md:text-5xl font-extrabold mb-4"
+            style={{ color: '#1A1B3C' }}
+          >
             PKKMB Moments
           </h1>
-          <p className="text-base max-w-md mx-auto" style={{ color: '#6B7280' }}>
-            Real photobooth results from your sessions will appear here. Create yours and it will be featured.
+
+          <p
+            className="text-base max-w-md mx-auto"
+            style={{ color: '#6B7280' }}
+          >
+            Explore sample results from our photobooth frames and
+            find the perfect style for your moment.
           </p>
         </div>
 
-        {/* Masonry-style grid */}
+        {/* Gallery */}
         <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-          {GALLERY_ITEMS.map((item, i) => (
-            <div
-              key={i}
-              className="break-inside-avoid rounded-2xl overflow-hidden cursor-pointer group transition-all hover:scale-102 hover:shadow-xl"
-              style={{ boxShadow: '0 2px 16px rgba(26,27,60,0.08)' }}
-              onClick={() => navigate('/frames')}
-            >
-              {/* Placeholder photobooth result */}
+          {FRAMES.map((frame) => {
+            const previewUrl = getPreviewUrl(frame);
+
+            return (
               <div
-                className="w-full flex flex-col items-center justify-center p-6 text-white"
+                key={frame.id}
+                className="break-inside-avoid rounded-2xl overflow-hidden cursor-pointer group transition-all hover:scale-[1.02] hover:shadow-xl"
                 style={{
-                  background: `linear-gradient(160deg, ${item.color}CC 0%, ${item.color} 100%)`,
-                  aspectRatio: i % 3 === 0 ? '0.5' : i % 3 === 1 ? '0.65' : '0.55',
-                  minHeight: 160,
+                  boxShadow: '0 2px 16px rgba(26,27,60,0.08)',
                 }}
               >
-                <Image size={28} style={{ opacity: 0.6, marginBottom: 8 }} />
-                <span className="text-xs font-semibold text-white/70 text-center">{item.label}</span>
-                <span className="text-xs text-white/50 mt-1">{item.sub}</span>
-              </div>
-              <div
-                className="p-3 flex items-center justify-between"
-                style={{ background: '#FFFFFF' }}
-              >
-                <div>
-                  <p className="text-xs font-semibold" style={{ color: '#1A1B3C' }}>{item.label}</p>
-                  <p className="text-xs" style={{ color: '#6B7280' }}>{item.sub}</p>
-                </div>
-                <span
-                  className="text-xs px-2 py-0.5 rounded-full font-medium"
-                  style={{ background: `${item.color}15`, color: item.color }}
+
+                {/* Template Preview */}
+                <div
+                  className="relative w-full overflow-hidden"
+                  style={{
+                    background: '#FFFFFF',
+                    aspectRatio: String(frame.aspectRatio),
+                  }}
                 >
-                  Sample
-                </span>
+                  {previewUrl ? (
+                    <img
+                      src={previewUrl}
+                      alt={`Sample ${getFrameLabel(frame)}`}
+                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div
+                      className="w-full h-full flex items-center justify-center"
+                      style={{
+                        background: 'rgba(108,99,255,0.05)',
+                        color: '#9CA3AF',
+                      }}
+                    >
+                      <span className="text-xs">
+                        Preview unavailable
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Hover overlay */}
+                  <div
+                    className="absolute inset-0 flex items-end opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background:
+                        'linear-gradient(to top, rgba(26,27,60,0.7), transparent 55%)',
+                    }}
+                  >
+                    <div className="w-full p-4">
+                      <p className="text-sm font-bold text-white">
+                        {getFrameLabel(frame)}
+                      </p>
+
+                      <p className="text-xs text-white/70 mt-1">
+                        {frame.slots.length} photo slot
+                        {frame.slots.length > 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card info */}
+                <div
+                  className="p-3 flex items-center justify-between"
+                  style={{ background: '#FFFFFF' }}
+                >
+                  <div>
+                    <p
+                      className="text-xs font-semibold"
+                      style={{ color: '#1A1B3C' }}
+                    >
+                      {getFrameLabel(frame)}
+                    </p>
+
+                    <p
+                      className="text-xs"
+                      style={{ color: '#6B7280' }}
+                    >
+                      {frame.categoryLabel}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => handleTryFrame(frame)}
+                    className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg font-semibold transition-all hover:scale-105"
+                    style={{
+                      background: 'rgba(108,99,255,0.1)',
+                      color: '#6C63FF',
+                    }}
+                  >
+                    Try
+                    <ArrowRight size={12} />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
+        {/* Bottom CTA */}
         <div className="mt-14 text-center">
           <div
             className="inline-block rounded-2xl p-8 max-w-md"
-            style={{ background: '#FFFFFF', boxShadow: '0 2px 16px rgba(26,27,60,0.06)', border: '1px solid rgba(108,99,255,0.08)' }}
+            style={{
+              background: '#FFFFFF',
+              boxShadow: '0 2px 16px rgba(26,27,60,0.06)',
+              border: '1px solid rgba(108,99,255,0.08)',
+            }}
           >
-            <p className="text-sm font-medium mb-4" style={{ color: '#6B7280' }}>
-              Your photobooth results appear here after your session.
+            <p
+              className="text-sm font-medium mb-4"
+              style={{ color: '#6B7280' }}
+            >
+              Found a frame you like? Create your own photobooth
+              moment now.
             </p>
+
             <button
               onClick={() => navigate('/frames')}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white"
-              style={{ background: 'linear-gradient(135deg, #6C63FF 0%, #D946EF 100%)' }}
+              style={{
+                background:
+                  'linear-gradient(135deg, #6C63FF 0%, #D946EF 100%)',
+              }}
             >
               <Camera size={15} />
-              Create Your First
+              Choose Your Frame
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );
