@@ -313,5 +313,5 @@ export const CATEGORY_COLORS: Record<
 export function getFrameImageUrl(
   frame: FrameData
 ): string {
-  return `/frames/${frame.category}/${frame.name}.${frame.ext}`;
+  return `${import.meta.env.BASE_URL}frames/${frame.category}/${frame.name}.${frame.ext}`;
 }
