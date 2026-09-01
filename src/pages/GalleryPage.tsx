@@ -1,42 +1,47 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Camera, ArrowRight } from 'lucide-react';
-import { FRAMES, type FrameData } from '../data/frames';
+import {
+  Sparkles,
+  Heart,
+  Monitor,
+  Star,
+  Disc3,
+  Headphones,
+} from 'lucide-react';
 
-// Ambil semua template preview yang tersedia.
-// Struktur:
-// src/templates/frame_templates/[category]/[frame]/template_preview.png
-const previewModules = import.meta.glob(
-  '../templates/frame_templates/*/*/template_preview.png',
+const GALLERY_ITEMS = [
   {
-    eager: true,
-    import: 'default',
-    query: '?url',
-  }
-) as Record<string, string>;
-
-function getPreviewUrl(frame: FrameData): string {
-  const expectedSuffix =
-    `/${frame.category}/${frame.name}/template_preview.png`;
-
-  const entry = Object.entries(previewModules).find(([path]) =>
-    path.endsWith(expectedSuffix)
-  );
-
-  return entry?.[1] ?? '';
-}
-
-function getFrameLabel(frame: FrameData): string {
-  return `${frame.categoryLabel} ${frame.name.match(/\d+$/)?.[0] ?? ''}`.trim();
-}
+    image: 'gallery-samples/aesthetic.jpg',
+    label: 'Aesthetic',
+    icon: Sparkles,
+  },
+  {
+    image: 'gallery-samples/cute.jpg',
+    label: 'Cute',
+    icon: Heart,
+  },
+  {
+    image: 'gallery-samples/fik.jpg',
+    label: 'FIK',
+    icon: Monitor,
+  },
+  {
+    image: 'gallery-samples/fun.jpg',
+    label: 'Fun',
+    icon: Star,
+  },
+  {
+    image: 'gallery-samples/y2k.jpg',
+    label: 'Y2K',
+    icon: Disc3,
+  },
+  {
+    image: 'gallery-samples/retro.jpg',
+    label: 'Retro',
+    icon: Headphones,
+  },
+];
 
 export default function GalleryPage() {
-  const navigate = useNavigate();
-
-  const handleTryFrame = (frame: FrameData) => {
-    navigate('/frames');
-  };
-
   return (
     <div
       className="min-h-screen pt-24 pb-20 px-4 page-enter"
@@ -45,15 +50,16 @@ export default function GalleryPage() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-10 md:mb-12">
           <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-5"
             style={{
-              background: 'rgba(108,99,255,0.1)',
+              background: 'rgba(108, 99, 255, 0.1)',
               color: '#6C63FF',
-              border: '1px solid rgba(108,99,255,0.2)',
+              border: '1px solid rgba(108, 99, 255, 0.2)',
             }}
           >
+            <Sparkles size={14} />
             Gallery
           </div>
 
@@ -65,7 +71,7 @@ export default function GalleryPage() {
           </h1>
 
           <p
-            className="text-base max-w-md mx-auto"
+            className="text-base md:text-lg max-w-xl mx-auto leading-relaxed"
             style={{ color: '#6B7280' }}
           >
             Explore sample results from our photobooth frames and
@@ -73,137 +79,98 @@ export default function GalleryPage() {
           </p>
         </div>
 
-        {/* Gallery */}
-        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-          {FRAMES.map((frame) => {
-            const previewUrl = getPreviewUrl(frame);
+        {/* Gallery Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+          {GALLERY_ITEMS.map((item) => {
+            const Icon = item.icon;
 
             return (
               <div
-                key={frame.id}
-                className="break-inside-avoid rounded-2xl overflow-hidden cursor-pointer group transition-all hover:scale-[1.02] hover:shadow-xl"
+                key={item.label}
+                className="group overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1"
                 style={{
-                  boxShadow: '0 2px 16px rgba(26,27,60,0.08)',
+                  boxShadow: '0 4px 20px rgba(26, 27, 60, 0.08)',
+                  border: '1px solid rgba(108, 99, 255, 0.08)',
                 }}
               >
-
-                {/* Template Preview */}
+                {/* Sample Image */}
                 <div
                   className="relative w-full overflow-hidden"
                   style={{
-                    background: '#FFFFFF',
-                    aspectRatio: String(frame.aspectRatio),
+                    aspectRatio: '1 / 1',
+                    background: '#F1F0F7',
                   }}
                 >
-                  {previewUrl ? (
-                    <img
-                      src={previewUrl}
-                      alt={`Sample ${getFrameLabel(frame)}`}
-                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div
-                      className="w-full h-full flex items-center justify-center"
-                      style={{
-                        background: 'rgba(108,99,255,0.05)',
-                        color: '#9CA3AF',
-                      }}
-                    >
-                      <span className="text-xs">
-                        Preview unavailable
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Hover overlay */}
-                  <div
-                    className="absolute inset-0 flex items-end opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      background:
-                        'linear-gradient(to top, rgba(26,27,60,0.7), transparent 55%)',
-                    }}
-                  >
-                    <div className="w-full p-4">
-                      <p className="text-sm font-bold text-white">
-                        {getFrameLabel(frame)}
-                      </p>
-
-                      <p className="text-xs text-white/70 mt-1">
-                        {frame.slots.length} photo slot
-                        {frame.slots.length > 1 ? 's' : ''}
-                      </p>
-                    </div>
-                  </div>
+                  <img
+                    src={item.image}
+                    alt={`Sample hasil frame ${item.label}`}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    loading="lazy"
+                  />
                 </div>
 
-                {/* Card info */}
-                <div
-                  className="p-3 flex items-center justify-between"
-                  style={{ background: '#FFFFFF' }}
-                >
-                  <div>
-                    <p
-                      className="text-xs font-semibold"
-                      style={{ color: '#1A1B3C' }}
-                    >
-                      {getFrameLabel(frame)}
-                    </p>
-
-                    <p
-                      className="text-xs"
-                      style={{ color: '#6B7280' }}
-                    >
-                      {frame.categoryLabel}
-                    </p>
+                {/* Card Label */}
+                <div className="px-5 py-4">
+                  <div
+                    className="flex items-center justify-center gap-2 text-base md:text-lg font-bold"
+                    style={{ color: '#6C63FF' }}
+                  >
+                    <span>{item.label}</span>
+                    <Icon size={17} strokeWidth={2} />
                   </div>
 
-                  <button
-                    onClick={() => handleTryFrame(frame)}
-                    className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg font-semibold transition-all hover:scale-105"
-                    style={{
-                      background: 'rgba(108,99,255,0.1)',
-                      color: '#6C63FF',
-                    }}
+                  <p
+                    className="text-xs text-center mt-1"
+                    style={{ color: '#9CA3AF' }}
                   >
-                    Try
-                    <ArrowRight size={12} />
-                  </button>
+                    Sample frame
+                  </p>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-14 text-center">
-          <div
-            className="inline-block rounded-2xl p-8 max-w-md"
-            style={{
-              background: '#FFFFFF',
-              boxShadow: '0 2px 16px rgba(26,27,60,0.06)',
-              border: '1px solid rgba(108,99,255,0.08)',
-            }}
-          >
-            <p
-              className="text-sm font-medium mb-4"
-              style={{ color: '#6B7280' }}
-            >
-              Found a frame you like? Create your own photobooth
-              moment now.
-            </p>
-
-            <button
-              onClick={() => navigate('/frames')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white"
+        {/* Disclaimer */}
+        <div
+          className="mt-8 md:mt-10 rounded-2xl px-5 py-5 md:px-7 md:py-6"
+          style={{
+            background: 'rgba(108, 99, 255, 0.06)',
+            border: '1px solid rgba(108, 99, 255, 0.12)',
+          }}
+        >
+          <div className="flex items-center justify-center gap-3 text-center">
+            <Sparkles
+              size={20}
               style={{
-                background:
-                  'linear-gradient(135deg, #6C63FF 0%, #D946EF 100%)',
+                color: '#6C63FF',
+                flexShrink: 0,
               }}
-            >
-              <Camera size={15} />
-              Choose Your Frame
-            </button>
+            />
+
+            <div>
+              <p
+                className="text-sm font-semibold"
+                style={{ color: '#4F46A5' }}
+              >
+                Semua foto di atas hanya contoh hasil dari frame.
+              </p>
+
+              <p
+                className="text-sm mt-1"
+                style={{ color: '#6B7280' }}
+              >
+                Hasil fotomu akan terlihat sesuai kreativitasmu!
+              </p>
+            </div>
+
+            <Heart
+              size={20}
+              style={{
+                color: '#A855F7',
+                flexShrink: 0,
+              }}
+            />
           </div>
         </div>
 
